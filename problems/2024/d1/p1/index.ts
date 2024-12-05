@@ -1,7 +1,7 @@
-import { getInput } from 'utils'
+import { getInput, print } from 'utils'
 export const input = await getInput('2024/d1')
 
-export function main() {
+function answer() {
 	let answer = 0
 
 	const rows = input.split('\n')
@@ -26,7 +26,7 @@ export function main() {
 	return answer
 }
 
-export function pookie() {
+function friend() {
 	function getColumn(input: string, regex: RegExp) {
 		return input
 			.match(regex)!
@@ -46,4 +46,6 @@ export function pookie() {
 	return total
 }
 
-if (import.meta.main) console.log({ answer: main(), pookie: pookie() })
+export const solutions = { answer, friend }
+
+if (import.meta.main) print(solutions)

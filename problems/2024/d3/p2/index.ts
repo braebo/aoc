@@ -1,7 +1,7 @@
-import { getInput } from 'utils'
-export const input = await getInput('2024/d3')
+import { getInput, print } from 'utils'
+const input = await getInput('2024/d3')
 
-export function main() {
+function answer() {
 	let total = 0
 
 	const valid = /(?:mul\((\d{1,3}),(\d{1,3})\))/gm
@@ -14,4 +14,24 @@ export function main() {
 	return total
 }
 
-if (import.meta.main) console.log({ answer: main(), pookie: null })
+function friend() {
+	return input
+		.matchAll(/mul\((\d+),(\d+)\)/g)
+		.filter(({ index }) => {
+			const current = `do()${input.slice(0, index)}`
+			return current.lastIndexOf("don't()") < current.lastIndexOf('do()')
+		})
+		.map(([, a, b]) => Number.parseInt(a) * Number.parseInt(b))
+		.reduce((a, x) => a + x, 0)
+}
+
+function allInOne() {
+	return input
+		.matchAll(/(?<=(?:(?:do\(\))|^)(?:(?!don't\(\)).)*)mul\((\d+),(\d+)\)/gs)
+		.map(([, a, b]) => Number.parseInt(a) * Number.parseInt(b))
+		.reduce((a, x) => a + x, 0)
+}
+
+export const solutions = { answer, friend, allInOne }
+
+if (import.meta.main) print(solutions)

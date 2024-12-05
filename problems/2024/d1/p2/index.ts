@@ -1,7 +1,7 @@
-import { getInput } from 'utils'
+import { getInput, print } from 'utils'
 export const input = await getInput('2024/d1')
 
-export function main() {
+function answer() {
 	let answer = 0
 
 	const rows = input.split('\n')
@@ -24,11 +24,7 @@ export function main() {
 	return answer
 }
 
-function getColumn(input: string, regex: RegExp) {
-	return input.match(regex)!.map(n => Number.parseInt(n))
-}
-
-export function pookie() {
+function friend() {
 	const left = getColumn(input, /^\d+/gm)
 	const right = getColumn(input, /\d+$/gm)
 
@@ -41,4 +37,10 @@ export function pookie() {
 	return similarity
 }
 
-if (import.meta.main) console.log({ answer: main(), pookie: pookie() })
+function getColumn(input: string, regex: RegExp) {
+	return input.match(regex)!.map(n => Number.parseInt(n))
+}
+
+export const solutions = { answer, friend }
+
+if (import.meta.main) print(solutions)

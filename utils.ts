@@ -79,6 +79,7 @@ export const underline = color('underline')
 
 /** Shorthand for `console.log`. */
 export const l = console.log
+export const n = () => console.log('')
 
 /** Shorthand for `red`. */
 export const r = color('red')
@@ -98,3 +99,40 @@ export const d = color('dim')
 export const o = hex('#ff7f50')
 /** Shorthand for `purple`. */
 export const p = hex('#800080')
+
+export const print = (solutions: Record<string, () => unknown>) =>
+	Object.fromEntries(Object.entries(solutions).map(([key, fn]) => [key, fn()]))
+
+export function start(decimals = 1) {
+	const start = performance.now()
+
+	return () => {
+		const number = performance.now() - start
+		const string = fmtTime(number, { decimals })
+		return { number, string }
+	}
+}
+
+export function fmtTime(n: number, options?: { decimals?: number }): string {
+	const { decimals = n > 1 ? 1 : 2 } = options ?? {}
+
+	if (n < 10) {
+		return removeTrailingZeroes(getBestPrecision(n)) + dim('ms')
+	} else {
+		return removeTrailingZeroes((n / 1000).toFixed(decimals)) + dim('s')
+	}
+
+	function removeTrailingZeroes(str: string): string {
+		return str.replace(/\.?0+$/, '')
+	}
+
+	function getBestPrecision(ms: number) {
+		for (let decimals = 1; decimals <= 10; decimals++) {
+			const value = ms.toFixed(decimals)
+			if (value.at(-1) !== '0') {
+				return value
+			}
+		}
+		return ms.toString() // Just in case...
+	}
+}

@@ -1,9 +1,9 @@
-import { getInput } from 'utils'
+import { getInput, print } from 'utils'
 export const input = await getInput('2024/d2')
 
-const reports = input.split('\n').map(line => line.split(' ').map(Number))
+function answer() {
+	const reports = input.split('\n').map(line => line.split(' ').map(Number))
 
-export function main() {
 	let safe = 0
 
 	check: for (let i = 0; i < reports.length; i++) {
@@ -27,4 +27,26 @@ export function main() {
 	return safe
 }
 
-if (import.meta.main) console.log({ answer: main(), pookie: null })
+function friend() {
+	let safe = 0
+
+	for (const line of input.split('\n')) {
+		const report = line.split(' ').map(n => Number.parseInt(n))
+		const type = Math.sign(report.at(0)! - report.at(-1)!)
+
+		const is_safe = report.every(
+			(n, i, a) =>
+				i == 0 || (Math.sign(a[i - 1] - n) === type && Math.abs(a[i - 1] - n) <= 3),
+		)
+
+		if (is_safe) {
+			safe++
+		}
+	}
+
+	return safe
+}
+
+export const solutions = { answer, friend }
+
+if (import.meta.main) print(solutions)
