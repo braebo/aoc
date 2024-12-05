@@ -1,5 +1,5 @@
 import { getInput, print } from 'utils'
-export const input = await getInput('2024/d4')
+const input = await getInput('2024/d4')
 
 type Point = [x: number, y: number]
 type Direction = [x: number, y: number]
@@ -26,16 +26,11 @@ function answer() {
 
 	for (let y = 0; y < rows; y++) {
 		for (let x = 0; x < cols; x++) {
-			const pos: Point = [x, y]
-			const char = mat[x][y]
-
-			if (char === 'X') {
-				check(pos)
+			if (mat[x][y] === 'X') {
+				check([x, y])
 			}
 		}
 	}
-
-	prettyPrint(mat, words, found)
 
 	function check(cell: Point) {
 		for (let i = 0; i < directions.length; i++) {
@@ -46,21 +41,23 @@ function answer() {
 				if (import.meta.main) words.push(cells)
 			}
 		}
-
-		function test(p: Point, d: Direction, i: number, cells: Point[] = [p]): [boolean, Point[]] {
-			if (i >= sequence.length) return [true, cells]
-
-			const x = p[0] + d[0]
-			const y = p[1] + d[1]
-
-			if (mat[x]?.[y] === sequence[i]) {
-				if (import.meta.main) cells.push([x, y])
-				return test([x, y], d, i + 1, cells)
-			}
-
-			return [false, cells]
-		}
 	}
+
+	function test(p: Point, d: Direction, i: number, cells: Point[] = [p]): [boolean, Point[]] {
+		if (i >= sequence.length) return [true, cells]
+
+		const x = p[0] + d[0]
+		const y = p[1] + d[1]
+
+		if (mat[x]?.[y] === sequence[i]) {
+			if (import.meta.main) cells.push([x, y])
+			return test([x, y], d, i + 1, cells)
+		}
+
+		return [false, cells]
+	}
+
+	prettyPrint(mat, words, found)
 
 	return 0
 }
