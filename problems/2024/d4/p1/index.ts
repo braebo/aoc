@@ -1,4 +1,4 @@
-import { getInput, print } from 'utils'
+import { getInput, print, visualize } from 'utils'
 const input = await getInput('2024/d4')
 
 type Point = [x: number, y: number]
@@ -57,38 +57,9 @@ function answer() {
 		return [false, cells]
 	}
 
-	prettyPrint(mat, words, found)
+	visualize(mat, words, found)
 
 	return 0
-}
-
-/**
- * Prints a nice output where each cell's brightness is increased based on the number of
- * matches it's included in.  Only called when running this script directly.
- */
-function prettyPrint(mat: string[][], words: Point[][], found: number) {
-	const brightness: number[][] = Array(mat.length)
-		.fill(0)
-		.map(() => Array(mat[0].length).fill(0))
-
-	for (const word of words) {
-		for (const [x, y] of word) {
-			brightness[x][y]++
-		}
-	}
-
-	for (let x = 0; x < mat.length; x++) {
-		for (let y = 0; y < mat[0].length; y++) {
-			const b = brightness[x][y]
-			const colorCode = b === 0 ? 235 : Math.min(240 + b * 5, 255)
-			mat[x][y] = `\x1b[38;5;${colorCode}m${mat[x][y]}\x1b[0m`
-			// Brightest are bold.
-			if (b >= 3) mat[x][y] = `\x1b[1m${mat[x][y]}\x1b[0m`
-		}
-	}
-
-	console.log(mat.map(r => r.join('')).join('\n'))
-	console.log(found, 'XMAS found')
 }
 
 export const solutions = { answer }

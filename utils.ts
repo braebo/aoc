@@ -136,3 +136,32 @@ export function fmtTime(n: number, options?: { decimals?: number }): string {
 		return ms.toString() // Just in case...
 	}
 }
+
+/**
+ * Prints a nice output where each cell's brightness is increased based on the number of
+ * matches it's included in.  Only called when running this script directly.
+ */
+export function visualize(mat: string[][], words: [number, number][][], found: number) {
+	const brightness: number[][] = Array(mat.length)
+		.fill(0)
+		.map(() => Array(mat[0].length).fill(0))
+
+	for (const word of words) {
+		for (const [x, y] of word) {
+			brightness[x][y]++
+		}
+	}
+
+	for (let x = 0; x < mat.length; x++) {
+		for (let y = 0; y < mat[0].length; y++) {
+			const b = brightness[x][y]
+			const colorCode = b === 0 ? 235 : Math.min(245 + b * 5, 255)
+			mat[x][y] = `\x1b[38;5;18${colorCode}m${mat[x][y]}\x1b[0m`
+			// Brightest are bold.
+			if (b >= 3) mat[x][y] = `\x1b[1m${mat[x][y]}\x1b[0m`
+		}
+	}
+
+	console.log(mat.map(r => r.join('')).join('\n'))
+	console.log(found, 'XMAS found')
+}
